@@ -1,0 +1,6 @@
+[submodule "nvmain"]
+	path = nvmain
+	url = git@gitee.com:willson0v0/nvmain-patched.git
+[submodule "gem5"]
+	path = gem5
+	url = git@gitee.com:willson0v0/gem5-for-nvmain.git
