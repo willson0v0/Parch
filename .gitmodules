@@ -4,3 +4,6 @@
 [submodule "gem5"]
 	path = gem5
 	url = git@gitee.com:willson0v0/gem5-for-nvmain.git
+[submodule "kernel"]
+	path = kernel
+	url = git@gitee.com:willson0v0/parch-kernel.git

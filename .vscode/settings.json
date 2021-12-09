@@ -1,0 +1,11 @@
+{
+	"python.analysis.extraPaths": [
+		"./gem5/build/RISCV/python",
+		"./gem5/configs"
+	],
+	"rust-analyzer.checkOnSave.allTargets": false,
+	"rust-analyzer.checkOnSave.extraArgs": [
+		"--target",
+		"riscv64gc-unknown-none-elf"
+	]
+}

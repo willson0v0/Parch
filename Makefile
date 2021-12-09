@@ -6,4 +6,7 @@ gem5/build/RISCV/gem5.opt:
 
 gem5.opt: gem5/build/RISCV/gem5.opt
 
-.PHONY: gem5.opt
+sim: gem5.opt
+	gem5/build/RISCV/gem5.opt platform.py --mem-type=NVMainMemory
+
+.PHONY: gem5.opt sim
