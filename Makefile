@@ -6,6 +6,9 @@ OBJCOPY 		:= rust-objcopy --binary-architecture=riscv64
 OUTPUT			:= output
 GEM5_OPT		:= gem5/build/RISCV/gem5.opt
 M5_TERM			:= gem5/util/term
+LOG_LVL			?= debug
+FEATURES		?= log_$(LOG_LVL)
+
 
 ifeq ($(MODE), debug)
 KERNEL_ELF_OUT := kernel/target/riscv64gc-unknown-none-elf/debug/parch_kernel
@@ -24,10 +27,10 @@ $(GEM5_OPT): $(shell find gem5/src -type f) $(shell find nvmain/src -type f) $(s
 gem5.opt: $(GEM5_OPT)
 
 kernel/target/riscv64gc-unknown-none-elf/debug/parch_kernel: $(shell find kernel/src -type f)
-	cd kernel && cargo build
+	cd kernel && cargo build --features "$(FEATURES)"
 
 kernel/target/riscv64gc-unknown-none-elf/release/parch_kernel: $(shell find kernel/src -type f)
-	cd kernel && cargo build --release
+	cd kernel && cargo build --release --features "$(FEATURES)"
 
 $(KERNEL_ELF): $(KERNEL_ELF_OUT) | $(OUTPUT)
 	cp $(KERNEL_ELF_OUT) $@
@@ -58,7 +61,7 @@ debug-qemu: kernel
 run-qemu: kernel
 	qemu-system-riscv64 -machine virt -nographic -bios $(KERNEL_BIN)
 
-run-gem5: gem5.opt m5term
+run-gem5: gem5.opt m5term kernel
 	tmux new-session -d \
 		"$(GEM5_OPT) gem5/configs/example/riscv/fs_linux.py --kernel $(KERNEL_ELF) --cpu-type=AtomicSimpleCPU --mem-type=NVMainMemory --nvmain-config=nvmain/Config/PerfectMemory.config" && \
 		tmux split-window -h "sleep 3 && $(M5_TERM)/m5term localhost 3456" && \
