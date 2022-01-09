@@ -7,5 +7,10 @@
 	"rust-analyzer.checkOnSave.extraArgs": [
 		"--target",
 		"riscv64gc-unknown-none-elf"
-	]
+	],
+	"files.associations": {
+		"*.tcc": "cpp",
+		"string_view": "cpp",
+		"variant": "cpp"
+	}
 }
