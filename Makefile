@@ -27,27 +27,27 @@ $(GEM5_OPT): $(shell find gem5/src -type f) $(shell find nvmain/src -type f) $(s
 gem5.opt: $(GEM5_OPT)
 
 kernel/target/riscv64gc-unknown-none-elf/debug/parch_kernel: $(shell find kernel/src -type f)
-	cd kernel && cargo build --features "$(FEATURES)"
+	@cd kernel && cargo build --features "$(FEATURES)"
 
 kernel/target/riscv64gc-unknown-none-elf/release/parch_kernel: $(shell find kernel/src -type f)
-	cd kernel && cargo build --release --features "$(FEATURES)"
+	@cd kernel && cargo build --release --features "$(FEATURES)"
 
 $(KERNEL_ELF): $(KERNEL_ELF_OUT) | $(OUTPUT)
-	cp $(KERNEL_ELF_OUT) $@
+	@cp $(KERNEL_ELF_OUT) $@
 
 $(KERNEL_SYM): $(KERNEL_ELF)
-	chronic $(OBJDUMP) -t $(KERNEL_ELF) | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$$/d'  | sort > $@
+	@chronic $(OBJDUMP) -t $(KERNEL_ELF) | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$$/d'  | sort > $@
 
 $(KERNEL_ASM): $(KERNEL_ELF)
 	$(OBJDUMP) -S --triple=riscv64 $(KERNEL_ELF) > $@
 
 $(KERNEL_BIN): $(KERNEL_ELF)
-	chronic $(OBJCOPY) $(KERNEL_ELF) --strip-all -O binary $@
+	@chronic $(OBJCOPY) $(KERNEL_ELF) --strip-all -O binary $@
 
 kernel: $(KERNEL_ELF) $(KERNEL_SYM) $(KERNEL_ASM) $(KERNEL_BIN)
 
 $(OUTPUT):
-	mkdir $@
+	@mkdir $@
 
 m5term: $(M5_TERM)
 
