@@ -1,0 +1,46 @@
+There are several parts within this project with different license. You can find their information here.
+
+Part	    | license                               | Description
+======================================================================================================================
+gem5        | Berkeley-style open source license    | This version of GEM5 was MODIFIED. Source: 
+            |                                       | https://www.gem5.org/
+------------+---------------------------------------+-----------------------------------------------------------------
+nvmain      | None                                  | This version of NVMain was MODIFIED. 
+            |                                       | According to it's wiki (http://wiki.nvmain.org/ ),
+            |                                       | We can use this in publishable research as long as we include
+            |                                       | the original NVMain paper (NVMain 2.0: Architectural Simulator
+            |                                       | to Model (Non-)Volatile Memory Systems, Matt Poremba, Tao Zhang, 
+            |                                       | Yuan Xie, Computer Architecture Letters (CAL), 2015.)
+------------+---------------------------------------+-----------------------------------------------------------------
+kernel      | GPL v3                                | This part is mostly original work, But are inspired by r-core 
+            |                                       | (https://github.com/rcore-os/rCore-Tutorial-v3) and XV6-riscv
+            |                                       | (https://github.com/mit-pdos/xv6-riscv). This part does contain
+            |                                       | modified code segment from xv6-riscv, and the original MIT 
+            |                                       | License is include at the header part of respective part.
+------------+---------------------------------------+-----------------------------------------------------------------
+testbench   | GPL v3                                | This part is licensed under GPL v3 and is original work.
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+该项目由不同部分组成，且各部分包含不同的许可证。这里有它们的信息。
+
+部分        | 许可证                                | 描述
+======================================================================================================================
+gem5        | Berkeley-style open source license    | 该版本的GEM5是从原始版本上修改而来。原项目地址：
+            |                                       | https://www.gem5.org/
+------------+---------------------------------------+-----------------------------------------------------------------
+nvmain      | None                                  | 该版本的NVMain是从原始版本上修改而来。根据其维基
+            |                                       | (http://wiki.nvmain.org/), 只要们在论文中引用NVMain的原始论文
+            |                                       | （NVMain 2.0: Architectural Simulator to Model (Non-)Volatile 
+            |                                       | Memory Systems, Matt Poremba, Tao Zhang, Yuan Xie, Computer 
+            |                                       | Architecture Letters (CAL), 2015.)，我们就可以使用其代码。
+------------+---------------------------------------+-----------------------------------------------------------------
+kernel      | GPL v3                                | 该部分主要为原创，使用GPL-v3协议，但有从xv6-riscv
+            |                                       | (https://github.com/mit-pdos/xv6-riscv)和r-core
+            |                                       | (https://github.com/rcore-os/rCore-Tutorial-v3)上获得灵感。这部
+            |                                       | 分同时亦含有xv6-riscv的少量修改过的代码片段，其原始MIT协议被置于
+            |                                       | 对应文件的顶部。
+------------+---------------------------------------+-----------------------------------------------------------------
+testbench   | GPL v3                                | 该部分为原创，使用GPL-v3发布。
