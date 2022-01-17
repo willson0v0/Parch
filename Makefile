@@ -36,13 +36,13 @@ $(KERNEL_ELF): $(KERNEL_ELF_OUT) | $(OUTPUT)
 	@cp $(KERNEL_ELF_OUT) $@
 
 $(KERNEL_SYM): $(KERNEL_ELF)
-	@chronic $(OBJDUMP) -t $(KERNEL_ELF) | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$$/d'  | sort > $@
+	$(OBJDUMP) -t $(KERNEL_ELF) | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$$/d'  | sort > $@
 
 $(KERNEL_ASM): $(KERNEL_ELF)
 	$(OBJDUMP) -S --triple=riscv64 $(KERNEL_ELF) > $@
 
 $(KERNEL_BIN): $(KERNEL_ELF)
-	@chronic $(OBJCOPY) $(KERNEL_ELF) --strip-all -O binary $@
+	@chronic $(OBJCOPY) $(KERNEL_ELF) -O binary $@
 
 kernel: $(KERNEL_ELF) $(KERNEL_SYM) $(KERNEL_ASM) $(KERNEL_BIN)
 
@@ -56,14 +56,14 @@ $(M5_TERM)/m5term: $(M5_TERM)/term.c $(M5_TERM)/Makefile
 	chmod 0755 $(M5_TERM)/m5term
 
 debug-qemu: kernel
-	qemu-system-riscv64 -s -S -machine virt -nographic -bios $(KERNEL_BIN)
+	qemu-system-riscv64 -s -S -machine virt -m 2G -nographic -bios $(KERNEL_BIN)
 
 run-qemu: kernel
-	qemu-system-riscv64 -machine virt -nographic -bios $(KERNEL_BIN)
+	qemu-system-riscv64 -machine virt -m 2G -nographic -bios $(KERNEL_BIN)
 
 run-gem5: gem5.opt m5term kernel
 	tmux new-session -d \
-		"$(GEM5_OPT) gem5/configs/example/riscv/fs_linux.py --kernel $(KERNEL_ELF) --cpu-type=AtomicSimpleCPU --mem-type=NVMainMemory --nvmain-config=nvmain/Config/PerfectMemory.config" && \
+		"$(GEM5_OPT) gem5/configs/example/riscv/fs_linux.py --kernel $(KERNEL_ELF) --cpu-type=AtomicSimpleCPU --mem-type=NVMainMemory --nvmain-config=nvmain/Config/PerfectMemory.config --mem-size 2048MiB" && \
 		tmux split-window -h "sleep 3 && $(M5_TERM)/m5term localhost 3456" && \
 		tmux -2 attach-session -d
 
