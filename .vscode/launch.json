@@ -5,10 +5,30 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "debug parchfs exec",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/testbench/parchfs/parchfs",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${fileDirname}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "preLaunchTask": "make parchfs exec",
+            "setupCommands": [
+                {
+                    "description": "为 gdb 启用整齐打印",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+        {
             "type": "gdb",
             "request": "attach",
             "name": "Attach to gdbserver(debug ver.)",
-            "executable": "kernel/target/riscv64gc-unknown-none-elf/debug/parch_kernel",
+            "executable": "${workspaceRoot}/kernel/target/riscv64gc-unknown-none-elf/debug/parch_kernel",
             "target": "127.0.0.1:1234",
             "remote": true,
             "cwd": "${workspaceRoot}", 
@@ -21,7 +41,7 @@
             "type": "gdb",
             "request": "attach",
             "name": "Attach to gdbserver(release ver.)",
-            "executable": "kernel/target/riscv64gc-unknown-none-elf/release/parch_kernel",
+            "executable": "${workspaceRoot}/kernel/target/riscv64gc-unknown-none-elf/release/parch_kernel",
             "target": "127.0.0.1:1234",
             "remote": true,
             "cwd": "${workspaceRoot}", 

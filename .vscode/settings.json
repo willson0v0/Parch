@@ -74,6 +74,13 @@
 		"cinttypes": "cpp",
 		"typeindex": "cpp",
 		"typeinfo": "cpp",
-		"complex": "cpp"
-	}
+		"complex": "cpp",
+		"filesystem": "cpp",
+		"ranges": "cpp",
+		"compare": "cpp",
+		"concepts": "cpp"
+	},
+	"cmake.configureOnOpen": false,
+	"C_Cpp.default.cppStandard": "c++17",
+	"C_Cpp.default.cStandard": "c17"
 }

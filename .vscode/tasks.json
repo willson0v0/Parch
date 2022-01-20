@@ -45,6 +45,23 @@
 				"isDefault": true
 			},
 			"label": "Run debug qemu"
+		},
+		{
+			"type": "shell",
+			"command": "make",
+			"args": [
+				"-C",
+				"testbench/parchfs",
+				"parchfs"
+			],
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"label": "make parchfs exec"
 		}
 	]
 }
