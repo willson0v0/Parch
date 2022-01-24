@@ -20,6 +20,9 @@ KERNEL_ELF := $(OUTPUT)/parch.elf
 KERNEL_ASM := $(OUTPUT)/parch.asm
 KERNEL_SYM := $(OUTPUT)/parch.sym
 KERNEL_BIN := $(OUTPUT)/parch.bin
+KERNEL_FS_BIN := $(OUTPUT)/parch_fs.bin
+MK_PARCHFS := testbench/parchfs/parchfs
+PARCH_ROOTFS := testbench/parchfs/rootfs
 
 $(GEM5_OPT): $(shell find gem5/src -type f) $(shell find nvmain/src -type f) $(shell find nvmain/Simulators -type f)
 	cd gem5 && scons EXTRAS=../nvmain build/RISCV/gem5.opt -j $(NPROCS) PYTHON_CONFIG=/usr/bin/python3-config
@@ -43,6 +46,15 @@ $(KERNEL_ASM): $(KERNEL_ELF)
 
 $(KERNEL_BIN): $(KERNEL_ELF)
 	@chronic $(OBJCOPY) $(KERNEL_ELF) -O binary $@
+
+$(KERNEL_FS_BIN): $(KERNEL_BIN) $(KERNEL_SYM) $(MK_PARCHFS) $(PARCH_ROOTFS)
+	./$(MK_PARCHFS)
+
+$(MK_PARCHFS):
+	make -C testbench/parchfs all
+
+$(PARCH_ROOTFS):
+	make -C testbench/parchfs all
 
 kernel: $(KERNEL_ELF) $(KERNEL_SYM) $(KERNEL_ASM) $(KERNEL_BIN)
 
