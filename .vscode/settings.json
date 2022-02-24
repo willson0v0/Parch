@@ -3,7 +3,6 @@
 		"./gem5/build/RISCV/python",
 		"./gem5/configs"
 	],
-	"rust-analyzer.checkOnSave.allTargets": false,
 	"rust-analyzer.checkOnSave.extraArgs": [
 		"--target",
 		"riscv64gc-unknown-none-elf"
@@ -82,5 +81,14 @@
 	},
 	"cmake.configureOnOpen": false,
 	"C_Cpp.default.cppStandard": "c++17",
-	"C_Cpp.default.cStandard": "c17"
+	"C_Cpp.default.cStandard": "c17",
+	"rust-analyzer.cargo.features": [
+		"log_verbose"
+	],
+	"rust-analyzer.linkedProjects": [
+        "/home/willson0v0/parch/lab/parch/kernel/Cargo.toml"
+    ],
+	"rust-analyzer.checkOnSave.command": "cargo check",
+    "rust-analyzer.checkOnSave.enable": true,
+    "rust-analyzer.checkOnSave.allTargets": false,
 }
