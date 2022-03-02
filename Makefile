@@ -8,6 +8,7 @@ GEM5_OPT		:= gem5/build/RISCV/gem5.opt
 M5_TERM			:= gem5/util/term
 LOG_LVL			?= verbose
 FEATURES		?= log_$(LOG_LVL)
+CPUS			:= 1
 
 
 ifeq ($(MODE), debug)
@@ -22,7 +23,6 @@ KERNEL_SYM := $(OUTPUT)/parch.sym
 KERNEL_BIN := $(OUTPUT)/parch.bin
 KERNEL_FS_BIN := $(OUTPUT)/parch_fs.bin
 MK_PARCHFS := testbench/parchfs/parchfs
-PARCH_ROOTFS := testbench/parchfs/rootfs
 
 $(GEM5_OPT): $(shell find gem5/src -type f) $(shell find nvmain/src -type f) $(shell find nvmain/Simulators -type f)
 	cd gem5 && scons EXTRAS=../nvmain build/RISCV/gem5.opt -j $(NPROCS) PYTHON_CONFIG=/usr/bin/python3-config
@@ -47,11 +47,11 @@ $(KERNEL_ASM): $(KERNEL_ELF)
 $(KERNEL_BIN): $(KERNEL_ELF)
 	@chronic $(OBJCOPY) $(KERNEL_ELF) -O binary $@
 
-$(KERNEL_FS_BIN): $(KERNEL_BIN) $(KERNEL_SYM) $(PARCH_ROOTFS)
-	./$(MK_PARCHFS) output/parch.bin output/parch.sym output/parch_fs.bin testbench/parchfs/rootfs
+$(KERNEL_FS_BIN): $(KERNEL_BIN) $(KERNEL_SYM) testbench
+	./$(MK_PARCHFS) output/parch.bin output/parch.sym output/parch_fs.bin testbench/root_fs_parch
 
-$(PARCH_ROOTFS):
-	make -C testbench/parchfs all
+testbench:
+	make -C testbench all
 
 kernel: $(KERNEL_ELF) $(KERNEL_SYM) $(KERNEL_ASM) $(KERNEL_BIN) $(KERNEL_FS_BIN)
 
@@ -65,14 +65,15 @@ $(M5_TERM)/m5term: $(M5_TERM)/term.c $(M5_TERM)/Makefile
 	chmod 0755 $(M5_TERM)/m5term
 
 debug-qemu: kernel
-	qemu-system-riscv64 -s -S -machine virt -m 4G -nographic -device loader,file=$(KERNEL_FS_BIN),addr=0x80000000,force-raw=on
+	qemu-system-riscv64 -s -S -machine virt -m 4G -nographic -device loader,file=$(KERNEL_FS_BIN),addr=0x80000000,force-raw=on -smp $(CPUS)
 
 run-qemu: kernel
-	qemu-system-riscv64 -machine virt -m 4G -nographic -device loader,file=$(KERNEL_FS_BIN),addr=0x80000000,force-raw=on
+	qemu-system-riscv64 -machine virt -m 4G -nographic -device loader,file=$(KERNEL_FS_BIN),addr=0x80000000,force-raw=on -smp $(CPUS)
 
+# TODO: change to --param 'system.workload.extras = "$(KERNEL_FS_BIN)"' --param 'system.workload.extras_addrs = 0x80000000', no more elf
 run-gem5: gem5.opt m5term kernel
 	tmux new-session -d \
-		"$(GEM5_OPT) gem5/configs/example/riscv/fs_linux.py --kernel $(KERNEL_ELF) --cpu-type=AtomicSimpleCPU --mem-type=NVMainMemory --nvmain-config=nvmain/Config/PerfectMemory.config --mem-size 2048MiB" && \
+		"$(GEM5_OPT) gem5/configs/example/riscv/fs_linux.py --kernel $(KERNEL_ELF) --cpu-type=AtomicSimpleCPU --mem-type=NVMainMemory --nvmain-config=nvmain/Config/PerfectMemory.config --mem-size 4096MiB" && \
 		tmux split-window -h "sleep 3 && $(M5_TERM)/m5term localhost 3456" && \
 		tmux -2 attach-session -d
 
@@ -84,5 +85,6 @@ env:
 clean:
 	cd kernel && cargo clean
 	rm -rf output
+	make -C testbench clean
 
-.PHONY: gem5.opt run-gem5 clean kernel debug-qemu run-qemu m5term $(PARCH_ROOTFS) env
+.PHONY: gem5.opt run-gem5 clean kernel debug-qemu run-qemu m5term env testbench

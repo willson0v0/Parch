@@ -1,0 +1,17 @@
+name,syscall_id
+write,0
+read,1
+open,2
+openat,3
+close,4
+dup,5
+fork,6
+exec,7
+exit,8
+mmap,9
+signal,10
+waitpid,11
+sigaction,12
+sigreturn,13
+getcwd,14
+chdir,15
