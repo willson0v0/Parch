@@ -6,9 +6,9 @@ OBJCOPY 		:= rust-objcopy --binary-architecture=riscv64
 OUTPUT			:= output
 GEM5_OPT		:= gem5/build/RISCV/gem5.opt
 M5_TERM			:= gem5/util/term
-LOG_LVL			?= verbose
+LOG_LVL			?= debug
 FEATURES		?= log_$(LOG_LVL)
-CPUS			:= 1
+CPUS			:= 4
 
 
 ifeq ($(MODE), debug)
@@ -65,10 +65,10 @@ $(M5_TERM)/m5term: $(M5_TERM)/term.c $(M5_TERM)/Makefile
 	chmod 0755 $(M5_TERM)/m5term
 
 debug-qemu: kernel
-	qemu-system-riscv64 -s -S -machine virt -m 4G -nographic -device loader,file=$(KERNEL_FS_BIN),addr=0x80000000,force-raw=on -smp $(CPUS)
+	qemu-system-riscv64 -s -S -machine virt -D output/qemu.log -m 4G -nographic -device loader,file=$(KERNEL_FS_BIN),addr=0x80000000,force-raw=on -smp $(CPUS)
 
 run-qemu: kernel
-	qemu-system-riscv64 -machine virt -m 4G -nographic -device loader,file=$(KERNEL_FS_BIN),addr=0x80000000,force-raw=on -smp $(CPUS)
+	qemu-system-riscv64 -machine virt -D output/qemu.log -m 4G -nographic -device loader,file=$(KERNEL_FS_BIN),addr=0x80000000,force-raw=on -smp $(CPUS)
 
 # TODO: change to --param 'system.workload.extras = "$(KERNEL_FS_BIN)"' --param 'system.workload.extras_addrs = 0x80000000', no more elf
 run-gem5: gem5.opt m5term kernel
