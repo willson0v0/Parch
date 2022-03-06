@@ -16,7 +16,7 @@ kernel      | GPL v3                                | This part is mostly origin
             |                                       | (https://github.com/rcore-os/rCore-Tutorial-v3) and XV6-riscv
             |                                       | (https://github.com/mit-pdos/xv6-riscv). This part does contain
             |                                       | modified code segment from xv6-riscv, and the original MIT 
-            |                                       | License is include at the header part of respective part.
+            |                                       | License is include at the header part of respective file.
 ------------+---------------------------------------+-----------------------------------------------------------------
 testbench   | GPL v3                                | This part is licensed under GPL v3 and is original work.
 
