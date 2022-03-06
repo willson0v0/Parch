@@ -15,3 +15,4 @@ sigaction,12
 sigreturn,13
 getcwd,14
 chdir,15
+sbrk,16
