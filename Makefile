@@ -30,10 +30,10 @@ $(GEM5_OPT): $(shell find gem5/src -type f) $(shell find nvmain/src -type f) $(s
 gem5.opt: $(GEM5_OPT)
 
 kernel/target/riscv64gc-unknown-none-elf/debug/parch_kernel: $(shell find kernel/src -type f)
-	cd kernel && cargo build --features "$(FEATURES)"
+	cd kernel && cargo build --features "$(FEATURES)" --target-dir=./target
 
 kernel/target/riscv64gc-unknown-none-elf/release/parch_kernel: $(shell find kernel/src -type f)
-	cd kernel && cargo build --release --features "$(FEATURES)" 
+	cd kernel && cargo build --release --features "$(FEATURES)" --target-dir=./target
 
 $(KERNEL_ELF): $(KERNEL_ELF_OUT) | $(OUTPUT)
 	cp $(KERNEL_ELF_OUT) $@

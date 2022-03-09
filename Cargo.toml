@@ -1,0 +1,8 @@
+[workspace]
+
+members = [
+    "kernel",
+    "testbench/usrlib_rust",
+    "testbench/parch_utils/mkdir",
+    "testbench/parch_utils/shell"
+]

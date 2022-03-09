@@ -88,12 +88,12 @@
 	"C_Cpp.default.cppStandard": "c++17",
 	"C_Cpp.default.cStandard": "c17",
 	"rust-analyzer.cargo.features": [
-		"log_verbose"
+		// "log_verbose"
 	],
-	"rust-analyzer.linkedProjects": [
-        "/home/willson0v0/parch/lab/parch/kernel/Cargo.toml"
-    ],
-	"rust-analyzer.checkOnSave.command": "cargo check",
+	// "rust-analyzer.linkedProjects": [
+    //     "/home/willson0v0/parch/lab/parch/kernel/Cargo.toml",
+    //     "/home/willson0v0/parch/lab/parch/testbench/usrlib_rust/Cargo.toml",
+    // ],
     "rust-analyzer.checkOnSave.enable": true,
 	"rust-analyzer.checkOnSave.allTargets": false,
 	"python.formatting.provider": "black",
