@@ -57,6 +57,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "cat"
+version = "0.1.0"
+dependencies = [
+ "usrlib_rust",
+]
+
+[[package]]
 name = "chrono"
 version = "0.4.19"
 source = "registry+https://github.com/rust-lang/crates.io-index"
