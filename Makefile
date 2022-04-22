@@ -22,6 +22,8 @@ KERNEL_ASM := $(OUTPUT)/parch.asm
 KERNEL_SYM := $(OUTPUT)/parch.sym
 KERNEL_BIN := $(OUTPUT)/parch.bin
 KERNEL_FS_BIN := $(OUTPUT)/parch_fs.bin
+QEMU_DTB   := $(OUTPUT)/qemu.dtb
+QEMU_DTB_DUMP := $(OUTPUT)/qemu.dtb.dump
 MK_PARCHFS := testbench/parchfs/parchfs
 
 $(GEM5_OPT): $(shell find gem5/src -type f) $(shell find nvmain/src -type f) $(shell find nvmain/Simulators -type f)
@@ -29,11 +31,11 @@ $(GEM5_OPT): $(shell find gem5/src -type f) $(shell find nvmain/src -type f) $(s
 
 gem5.opt: $(GEM5_OPT)
 
-kernel/target/riscv64gc-unknown-none-elf/debug/parch_kernel: $(shell find kernel/src -type f)
-	cd kernel && cargo build --features "$(FEATURES)" --target-dir=./target
+kernel/target/riscv64gc-unknown-none-elf/debug/parch_kernel: $(shell find kernel/src -type f) $(QEMU_DTB)
+	cd kernel && cargo build --features "$(FEATURES)" --target-dir=./target --no-default-features 
 
-kernel/target/riscv64gc-unknown-none-elf/release/parch_kernel: $(shell find kernel/src -type f)
-	cd kernel && cargo build --release --features "$(FEATURES)" --target-dir=./target
+kernel/target/riscv64gc-unknown-none-elf/release/parch_kernel: $(shell find kernel/src -type f) $(QEMU_DTB)
+	cd kernel && cargo build --release --features "$(FEATURES)" --target-dir=./target --no-default-features 
 
 $(KERNEL_ELF): $(KERNEL_ELF_OUT) | $(OUTPUT)
 	cp $(KERNEL_ELF_OUT) $@
@@ -50,10 +52,16 @@ $(KERNEL_BIN): $(KERNEL_ELF)
 $(KERNEL_FS_BIN): $(KERNEL_BIN) $(KERNEL_SYM) testbench
 	./$(MK_PARCHFS) output/parch.bin output/parch.sym output/parch_fs.bin testbench/root_fs_parch
 
+$(QEMU_DTB): $(OUTPUT)
+	qemu-system-riscv64 -machine virt,dumpdtb=$(QEMU_DTB) -m 4G -nographic -device loader,file=$(KERNEL_FS_BIN),addr=0x80000000,force-raw=on -smp $(CPUS)
+
+$(QEMU_DTB_DUMP): output/qemu.dtb
+	dtc output/qemu.dtb > $(QEMU_DTB_DUMP)
+
 testbench:
 	make -C testbench all
 
-kernel: $(KERNEL_ELF) $(KERNEL_SYM) $(KERNEL_ASM) $(KERNEL_BIN) $(KERNEL_FS_BIN)
+kernel: $(KERNEL_ELF) $(KERNEL_SYM) $(KERNEL_ASM) $(KERNEL_BIN) $(KERNEL_FS_BIN) $(QEMU_DTB_DUMP)
 
 $(OUTPUT):
 	@mkdir $@
@@ -81,10 +89,11 @@ env:
 	cargo install cargo-binutils
 	rustup component add llvm-tools-preview
 
+dtb: output/qemu.dtb.dump
 
 clean:
 	cd kernel && cargo clean
 	rm -rf output
 	make -C testbench clean
 
-.PHONY: gem5.opt run-gem5 clean kernel debug-qemu run-qemu m5term env testbench
+.PHONY: gem5.opt run-gem5 clean kernel debug-qemu run-qemu m5term env testbench dtb

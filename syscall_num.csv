@@ -18,3 +18,7 @@ chdir,15
 sbrk,16
 getdents,17
 pipe,18
+sysstat,19
+munmap,20
+mkdir,21
+time,22

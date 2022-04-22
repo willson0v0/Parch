@@ -31,6 +31,7 @@
             "executable": "${workspaceRoot}/kernel/target/riscv64gc-unknown-none-elf/debug/parch_kernel",
             "target": "127.0.0.1:1234",
             "remote": true,
+            "stopAtEntry": true,
             "cwd": "${workspaceRoot}/kernel", 
             "gdbpath": "${workspaceRoot}/../env_clean/riscv-build/bin/riscv64-unknown-elf-gdb",
         },
@@ -41,6 +42,7 @@
             "executable": "${workspaceRoot}/kernel/target/riscv64gc-unknown-none-elf/release/parch_kernel",
             "target": "127.0.0.1:1234",
             "remote": true,
+            "stopAtEntry": true,
             "cwd": "${workspaceRoot}/kernel",
             "gdbpath": "${workspaceRoot}/../env_clean/riscv-build/bin/riscv64-unknown-elf-gdb",
         }
