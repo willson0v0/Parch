@@ -22,3 +22,4 @@ sysstat,19
 munmap,20
 mkdir,21
 time,22
+ioctl,23
