@@ -9,7 +9,7 @@ M5_TERM			:= gem5/util/term
 LOG_LVL			?= debug
 FEATURES		?= log_$(LOG_LVL)
 CPUS			:= 4
-
+QEMU			:= ../env_clean/qemu/build/qemu-system-riscv64
 
 ifeq ($(MODE), debug)
 KERNEL_ELF_OUT := kernel/target/riscv64gc-unknown-none-elf/debug/parch_kernel
@@ -53,7 +53,7 @@ $(KERNEL_FS_BIN): $(KERNEL_BIN) $(KERNEL_SYM) testbench
 	./$(MK_PARCHFS) output/parch.bin output/parch.sym output/parch_fs.bin testbench/root_fs_parch
 
 $(QEMU_DTB): $(OUTPUT)
-	qemu-system-riscv64 -machine virt,dumpdtb=$(QEMU_DTB) -m 4G -nographic -device loader,file=$(KERNEL_FS_BIN),addr=0x80000000,force-raw=on -smp $(CPUS)
+	$(QEMU) -machine virt,dumpdtb=$(QEMU_DTB) -m 4G -nographic -device loader,file=$(KERNEL_FS_BIN),addr=0x80000000,force-raw=on -smp $(CPUS)
 
 $(QEMU_DTB_DUMP): output/qemu.dtb
 	dtc output/qemu.dtb > $(QEMU_DTB_DUMP)
@@ -73,10 +73,10 @@ $(M5_TERM)/m5term: $(M5_TERM)/term.c $(M5_TERM)/Makefile
 	chmod 0755 $(M5_TERM)/m5term
 
 debug-qemu: kernel
-	qemu-system-riscv64 -s -S -machine virt -D output/qemu.log -m 4G -nographic -device loader,file=$(KERNEL_FS_BIN),addr=0x80000000,force-raw=on -smp $(CPUS)
+	$(QEMU) -s -S -machine virt -d cpu_reset -D output/qemu.log -m 4G -nographic -device loader,file=$(KERNEL_FS_BIN),addr=0x80000000,force-raw=on -smp $(CPUS)
 
 run-qemu: kernel
-	qemu-system-riscv64 -machine virt -D output/qemu.log -m 4G -nographic -device loader,file=$(KERNEL_FS_BIN),addr=0x80000000,force-raw=on -smp $(CPUS)
+	$(QEMU) -machine virt -d cpu_reset -D output/qemu.log -m 4G -nographic -device loader,file=$(KERNEL_FS_BIN),addr=0x80000000,force-raw=on -smp $(CPUS)
 
 # TODO: change to --param 'system.workload.extras = "$(KERNEL_FS_BIN)"' --param 'system.workload.extras_addrs = 0x80000000', no more elf
 run-gem5: gem5.opt m5term kernel

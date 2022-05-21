@@ -23,3 +23,5 @@ munmap,20
 mkdir,21
 time,22
 ioctl,23
+delete,24
+seek,25

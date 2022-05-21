@@ -82,7 +82,8 @@
 		"assert.h": "c",
 		"type.h": "c",
 		"stdarg.h": "c",
-		"utils.h": "c"
+		"utils.h": "c",
+		"cassert": "c"
 	},
 	"cmake.configureOnOpen": false,
 	"C_Cpp.default.cppStandard": "c++17",
