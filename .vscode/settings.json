@@ -83,7 +83,9 @@
 		"type.h": "c",
 		"stdarg.h": "c",
 		"utils.h": "c",
-		"cassert": "c"
+		"cassert": "c",
+		"stdbool.h": "c",
+		"m5ops.h": "c"
 	},
 	"cmake.configureOnOpen": false,
 	"C_Cpp.default.cppStandard": "c++17",

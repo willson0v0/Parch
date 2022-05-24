@@ -24,6 +24,8 @@ KERNEL_BIN := $(OUTPUT)/parch.bin
 KERNEL_FS_BIN := $(OUTPUT)/parch_fs.bin
 QEMU_DTB   := $(OUTPUT)/qemu.dtb
 QEMU_DTB_DUMP := $(OUTPUT)/qemu.dtb.dump
+GEM5_DTB   := $(OUTPUT)/gem5.dtb
+GEM5_DTB_DUMP := $(OUTPUT)/gem5.dtb.dump
 MK_PARCHFS := testbench/parchfs/parchfs
 
 $(GEM5_OPT): $(shell find gem5/src -type f) $(shell find nvmain/src -type f) $(shell find nvmain/Simulators -type f)
@@ -58,6 +60,12 @@ $(QEMU_DTB): $(OUTPUT)
 $(QEMU_DTB_DUMP): output/qemu.dtb
 	dtc output/qemu.dtb > $(QEMU_DTB_DUMP)
 
+$(GEM5_DTB): m5out/device.dtb
+	cp m5out/device.dtb $(GEM5_DTB)
+
+$(GEM5_DTB_DUMP): $(GEM5_DTB)
+	dtc $(GEM5_DTB) > $(GEM5_DTB_DUMP)
+
 testbench:
 	make -C testbench all
 
@@ -80,10 +88,27 @@ run-qemu: kernel
 
 # TODO: change to --param 'system.workload.extras = "$(KERNEL_FS_BIN)"' --param 'system.workload.extras_addrs = 0x80000000', no more elf
 run-gem5: gem5.opt m5term kernel
-	tmux new-session -d \
-		"$(GEM5_OPT) gem5/configs/example/riscv/fs_linux.py --kernel $(KERNEL_ELF) --cpu-type=AtomicSimpleCPU --mem-type=NVMainMemory --nvmain-config=nvmain/Config/PerfectMemory.config --mem-size 4096MiB" && \
-		tmux split-window -h "sleep 3 && $(M5_TERM)/m5term localhost 3456" && \
-		tmux -2 attach-session -d
+	$(GEM5_OPT) gem5/configs/example/riscv/fs_linux.py \
+		--param 'system.workload.extras = "$(KERNEL_FS_BIN)"' \
+		--param 'system.workload.extras_addrs = 0x80000000' \
+		--kernel $(KERNEL_ELF) \
+		--cpu-type=AtomicSimpleCPU --mem-type=DDR4_2400_8x8 --mem-size 4096MiB
+	# $(GEM5_OPT) gem5/configs/example/riscv/fs_linux.py \
+	# 	--param 'system.workload.extras = "$(KERNEL_FS_BIN)"' \
+	# 	--param 'system.workload.extras_addrs = 0x80000000' \
+	# 	--kernel $(KERNEL_ELF) \
+	# 	--cpu-type=AtomicSimpleCPU --mem-type=NVMainMemory --nvmain-config=nvmain/Config/PerfectMemory.config --mem-size 4096MiB
+	# tmux new-session -d \
+	# 	"$(GEM5_OPT) gem5/configs/example/riscv/fs_linux.py \
+	# 	--param 'system.workload.extras = "$(KERNEL_FS_BIN)"' \
+	# 	--param 'system.workload.extras_addrs = 0x80000000' \
+	# 	--kernel $(KERNEL_ELF) \
+	# 	--cpu-type=AtomicSimpleCPU --mem-type=NVMainMemory --nvmain-config=nvmain/Config/PerfectMemory.config --mem-size 4096MiB" && \
+	# 	tmux split-window -h "sleep 3 && $(M5_TERM)/m5term localhost 3456" && \
+	# 	tmux -2 attach-session -d
+
+gem5-term: 
+	$(M5_TERM)/m5term localhost 3456
 
 env:
 	cargo install cargo-binutils
@@ -96,4 +121,4 @@ clean:
 	rm -rf output
 	make -C testbench clean
 
-.PHONY: gem5.opt run-gem5 clean kernel debug-qemu run-qemu m5term env testbench dtb
+.PHONY: gem5.opt run-gem5 clean kernel debug-qemu run-qemu m5term env testbench dtb gem5-term
