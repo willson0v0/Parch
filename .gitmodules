@@ -1,12 +1,12 @@
 [submodule "nvmain"]
 	path = nvmain
-	url = git@gitee.com:willson0v0/nvmain-patched.git
+	url = git@github.com:willson0v0/NVMain.git
 [submodule "gem5"]
 	path = gem5
-	url = git@gitee.com:willson0v0/gem5-for-nvmain.git
+	url = git@github.com:willson0v0/Gem5.git
 [submodule "kernel"]
 	path = kernel
-	url = git@gitee.com:willson0v0/parch-kernel.git
+	url = git@github.com:willson0v0/ParchKernel.git
 [submodule "testbench"]
 	path = testbench
-	url = git@gitee.com:willson0v0/parch-testbench.git
+	url = git@github.com:willson0v0/ParchTestbench.git
